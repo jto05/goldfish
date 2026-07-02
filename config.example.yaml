@@ -1,0 +1,8 @@
+server:
+  java_path: /usr/bin/java
+  jar_path: /opt/minecraft/server.jar
+  mods_dir: /opt/minecraft/mods
+
+api:
+  listen_addr: :8080
+
