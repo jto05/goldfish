@@ -13,8 +13,8 @@ type (
 	}
 
 	ServerConfig struct {
-		JavaPath string `yaml:"java_path"`
-		JarPath  string `yaml:"jar_path"`
+		WorkDir  string `yaml:"work_dir"`
+		StartCmd string `yaml:"start_cmd"`
 		ModsDir  string `yaml:"mods_dir"`
 	}
 	APIConfig struct {
