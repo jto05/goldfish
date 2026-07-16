@@ -20,7 +20,7 @@ func waitForLine(t *testing.T, ch chan string) string {
 // TestHub_Register verifies that a registered client is tracked in the clients map
 // and receives broadcasted messages.
 func TestHub_Register(t *testing.T) {
-	hub, _ := NewHub(10)
+	hub := NewHub(10)
 	go hub.Run()
 
 	client := make(chan string, 1)
@@ -41,7 +41,7 @@ func TestHub_Register(t *testing.T) {
 // TestHub_Unregister verifies that an unregistered client is removed from the clients map
 // and its channel is closed.
 func TestHub_Unregister(t *testing.T) {
-	hub, _ := NewHub(10)
+	hub := NewHub(10)
 	go hub.Run()
 
 	client := make(chan string, 1)
@@ -65,7 +65,7 @@ func TestHub_Unregister(t *testing.T) {
 
 // TestHub_MultipleClients verifies that a broadcast is received by all registered clients.
 func TestHub_MultipleClients(t *testing.T) {
-	hub, _ := NewHub(10)
+	hub := NewHub(10)
 	go hub.Run()
 
 	client1 := make(chan string, 1)
@@ -86,7 +86,7 @@ func TestHub_MultipleClients(t *testing.T) {
 // TestHub_RingBufferCatchUp verifies that a newly registered client receives
 // historical lines from the ring buffer in order before any live messages.
 func TestHub_RingBufferCatchUp(t *testing.T) {
-	hub, _ := NewHub(10)
+	hub := NewHub(10)
 	go hub.Run()
 
 	hub.broadcast <- "line1"

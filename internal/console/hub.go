@@ -18,14 +18,14 @@ type Hub struct {
 }
 
 // NewHub allocates a Hub with a ring buffer of the given size for console history.
-func NewHub(bufferSize int) (*Hub, error) {
+func NewHub(bufferSize int) *Hub {
 	return &Hub{
 		clients:    make(map[chan string]bool),
 		register:   make(chan chan string),
 		unregister: make(chan chan string),
 		broadcast:  make(chan string),
 		history:    NewRingBuffer[string](bufferSize),
-	}, nil // TODO: error handling?
+	}
 }
 
 // Run starts the hub's event loop and must be called in its own goroutine.
