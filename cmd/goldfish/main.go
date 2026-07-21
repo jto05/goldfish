@@ -3,19 +3,36 @@ package main
 import (
 	"fmt"
 	"log"
+	"os"
+	"os/signal"
+	"syscall"
 
 	"github.com/jto05/goldfish/internal/config"
+	"github.com/jto05/goldfish/internal/process"
 )
 
 func main() {
-	cfg, err := config.Load("config.example.yaml")
+	cfg, err := config.Load("config.yaml")
 	if err != nil {
 		log.Fatal(err)
 	}
 	fmt.Printf("%+v\n", cfg)
 
-	// TODO: start the hub
-	// TODO: start the manager
-	// TODO: print console output to terminal
-	// TODO: handle Ctrl-C (OS signal) to call Stop() cleanly
+	m, err := process.NewManager(cfg.Server)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	err = m.Start()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	sig := make(chan os.Signal, 1)
+	signal.Notify(sig, syscall.SIGINT, syscall.SIGTERM)
+	<-sig
+
+	if err := m.Stop(); err != nil {
+		log.Println(err)
+	}
 }
