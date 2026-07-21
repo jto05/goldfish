@@ -1,6 +1,6 @@
 server:
-  java_path: /usr/bin/java
-  jar_path: /opt/minecraft/server.jar
+  work_dir: /opt/minecraft
+  start_cmd: java -jar server.jar nogui # or run.sh
   mods_dir: /opt/minecraft/mods
 
 api:
