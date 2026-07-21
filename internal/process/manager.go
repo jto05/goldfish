@@ -89,6 +89,9 @@ func (m *Manager) Start() error {
 	m.status = Running
 	m.startedAt = time.Now()
 
+	// start hub
+	go m.hub.Run()
+
 	// pipe stdout to hub
 	go func() {
 		// using scanner  for cleaner line by line outputs
@@ -142,10 +145,3 @@ func (m *Manager) SendCommand(cmd string) error {
 	}
 	return err
 }
-
-// TODO: write NewManager(cfg config.ServerConfig) *Manager
-// TODO: write Start() — launch server jar with os/exec, capture stdout/stderr, transition Starting -> Running
-// TODO: write Stop() — write stop command to stdin, transition Stopping -> Stopped
-// TODO: write SendCommand(cmd string) — write arbitrary command to stdin
-// TODO: goroutine to detect process exit and transition back to Stopped
-// TODO: pipe process stdout/stderr into hub.Broadcast inside Start()
