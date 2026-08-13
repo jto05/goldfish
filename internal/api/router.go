@@ -23,5 +23,5 @@ func (h *Handler) Routes() http.Handler {
 	mux.HandleFunc("POST /api/server/start", h.serverStart)
 	mux.HandleFunc("POST /api/server/stop", h.serverStop)
 	mux.HandleFunc("POST /api/server/command", h.serverCommand)
-	return nil
+	return mux
 }
