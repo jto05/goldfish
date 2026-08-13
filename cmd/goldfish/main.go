@@ -3,10 +3,12 @@ package main
 import (
 	"fmt"
 	"log"
+	"net/http"
 	"os"
 	"os/signal"
 	"syscall"
 
+	"github.com/jto05/goldfish/internal/api"
 	"github.com/jto05/goldfish/internal/config"
 	"github.com/jto05/goldfish/internal/process"
 )
@@ -27,6 +29,12 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	h := api.NewHandler(m, m.Hub())
+	go func() {
+		log.Printf("listening on %s", cfg.API.ListenAddr)
+		log.Fatal(http.ListenAndServe(cfg.API.ListenAddr, h.Routes()))
+	}()
 
 	sig := make(chan os.Signal, 1)
 	signal.Notify(sig, syscall.SIGINT, syscall.SIGTERM)
