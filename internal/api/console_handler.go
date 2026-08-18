@@ -24,7 +24,7 @@ func (h *Handler) serverConsole(w http.ResponseWriter, r *http.Request) {
 	}
 	defer conn.Close()
 
-	log.Print("console client connected: %s", r.RemoteAddr)
+	log.Printf("console client connected: %s", r.RemoteAddr)
 	defer log.Printf("console client disconnected: %s", r.RemoteAddr)
 
 	// register/unregister client
