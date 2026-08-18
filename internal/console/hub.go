@@ -1,8 +1,7 @@
 package console
 
 import (
-	// "log"
-	"log"
+// "log"
 )
 
 // Hub that tracks a list of clients, a channel for registering clients,
@@ -56,7 +55,7 @@ func (h *Hub) Run() error {
 				client <- msg
 			}
 			h.history.Push(msg) // push to history
-			log.Printf("[Broadcast]: %s", msg)
+			// log.Printf("[Broadcast]: %s", msg)
 		}
 	}
 }
@@ -64,4 +63,14 @@ func (h *Hub) Run() error {
 // Broadcast sends a line to the hub's broadcast channel to be fanned out to all clients.
 func (h *Hub) Broadcast(line string) {
 	h.broadcast <- line
+}
+
+// Register adds a client channel to the hub.
+func (h *Hub) Register(client chan string) {
+	h.register <- client
+}
+
+// Unregister removes a client channel from the hub and closes it.
+func (h *Hub) Unregister(client chan string) {
+	h.unregister <- client
 }

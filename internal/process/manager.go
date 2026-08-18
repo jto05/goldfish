@@ -145,3 +145,7 @@ func (m *Manager) SendCommand(cmd string) error {
 	}
 	return err
 }
+
+func (m *Manager) Hub() *console.Hub {
+	return m.hub
+}
