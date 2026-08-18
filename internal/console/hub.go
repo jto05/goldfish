@@ -1,8 +1,7 @@
 package console
 
 import (
-	// "log"
-	"log"
+// "log"
 )
 
 // Hub that tracks a list of clients, a channel for registering clients,

@@ -1,6 +1,7 @@
 package api
 
 import (
+	"log"
 	"net/http"
 
 	"github.com/gorilla/websocket"
@@ -22,6 +23,9 @@ func (h *Handler) serverConsole(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	defer conn.Close()
+
+	log.Print("console client connected: %s", r.RemoteAddr)
+	defer log.Printf("console client disconnected: %s", r.RemoteAddr)
 
 	// register/unregister client
 	client := make(chan string, 64)
