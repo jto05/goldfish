@@ -1,7 +1,9 @@
 import { useEffect, useRef, useState } from 'react'
 
-// WebSocket and server command endpoint served by the Go backend
+// WebSocket endpoint for live console streaming
 const WS_URL = 'ws://dev.homelab.internal:8080/ws/console'
+
+// REST endpoint for sending commands to the server
 const COMMAND_URL = 'http://dev.homelab.internal:8080/api/server/command'
 
 function Console() {
@@ -49,9 +51,8 @@ function Console() {
   }, [lines])
 
   // sendCommand POSTs the current input value to the backend as a server command.
-  // async/await pauses execution until fetch resolves — similar to Go's blocking
-  // calls but single-threaded. After sending, input is cleared regardless of
-  // whether the command succeeded (the server's response will appear in the console).
+  // async/await pauses execution until fetch resolves. After sending, input is
+  // cleared — the server's response will appear in the console output above.
   const sendCommand = async () => {
     if (!input.trim()) return
     await fetch(COMMAND_URL, {
@@ -63,37 +64,46 @@ function Console() {
   }
 
   // handleKeyDown fires on every keypress in the input field.
-  // We only act on Enter — all other keys are ignored and handled
-  // natively by the input element.
+  // We only act on Enter — all other keys are handled natively by the input.
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter') sendCommand()
   }
 
   return (
-    <div style={{ fontFamily: 'monospace' }}>
-      <div style={{ background: '#111', color: '#eee', height: '400px', overflowY: 'scroll', padding: '8px' }}>
+    // rounded-lg gives rounded corners; border and bg-zinc-950 style it as a
+    // dark terminal panel regardless of the app's light/dark theme.
+    <div className="rounded-lg border border-border overflow-hidden">
+
+      {/* Scrollable output area — flex-col-reverse would auto-scroll but
+          we use a ref-based approach instead for more control. font-mono
+          ensures monospace rendering for console output. */}
+      <div className="h-[500px] overflow-y-scroll bg-zinc-950 text-zinc-100 p-4 font-mono text-sm">
         {/* lines.map() transforms each string into a <div>.
             key={i} is required by React to efficiently track which elements
-            changed between renders — the index is fine here since lines only
-            ever grow (we never reorder or delete them). */}
+            changed between renders — index is fine here since lines only grow. */}
         {lines.map((line, i) => (
-          <div key={i}>{line}</div>
+          <div key={i} className="leading-5 whitespace-pre-wrap break-all">{line}</div>
         ))}
 
-        {/* Invisible anchor div at the end of the list. bottomRef points here
-            so scrollIntoView always scrolls to the very bottom. */}
+        {/* Invisible anchor div at the bottom — bottomRef points here so
+            scrollIntoView always scrolls to the very end of the output. */}
         <div ref={bottomRef} />
       </div>
 
-      {/* Controlled input — value is always in sync with the input state.
-          onChange updates state on every keystroke; onKeyDown sends on Enter. */}
-      <input
-        value={input}
-        onChange={(e) => setInput(e.target.value)}
-        onKeyDown={handleKeyDown}
-        placeholder="Enter command..."
-        style={{ width: '100%', fontFamily: 'monospace', background: '#222', color: '#eee', border: 'none', padding: '8px', boxSizing: 'border-box' }}
-      />
+      {/* Command input — sits flush at the bottom of the console panel.
+          border-t separates it from the output area.
+          value + onChange makes this a controlled input (value lives in state).
+          onKeyDown sends the command when Enter is pressed. */}
+      <div className="flex border-t border-border bg-zinc-900">
+        <span className="pl-4 py-3 text-zinc-500 font-mono text-sm select-none">{'>'}</span>
+        <input
+          className="flex-1 bg-transparent px-2 py-3 font-mono text-sm text-zinc-100 placeholder:text-zinc-600 focus:outline-none"
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          onKeyDown={handleKeyDown}
+          placeholder="Enter command..."
+        />
+      </div>
     </div>
   )
 }
