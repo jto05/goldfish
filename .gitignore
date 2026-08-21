@@ -2,3 +2,5 @@ build/
 config.yaml
 testserver/
 PLAN.md
+web/node_modules/
+web/dist/
