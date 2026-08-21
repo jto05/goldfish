@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Moon, Sun } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import Console from './Console'
+import ModList from './ModList'
 
 // Base URL for all server control REST endpoints
 const SERVER_URL = 'http://dev.homelab.internal:8080/api/server'
@@ -74,7 +75,16 @@ function App() {
           </div>
         </div>
 
-        <Console />
+        {/* Two-column layout — console on the left, mod list on the right.
+            calc(100vh-80px) fills the remaining viewport height below the header. */}
+        <div className="flex gap-4 h-[calc(100vh-80px)]">
+          <div className="flex-1">
+            <Console />
+          </div>
+          <div className="w-80">
+            <ModList />
+          </div>
+        </div>
       </div>
     </div>
   )
