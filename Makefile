@@ -7,6 +7,9 @@ build:
 run:
 	go run ./cmd/goldfish
 
+run-react:
+	npm run dev --prefix ./web -- --host
+
 test:
 	go test ./...
 
